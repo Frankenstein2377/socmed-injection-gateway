@@ -1,4 +1,4 @@
-<img src="https://i.ibb.co/PzPm9hX/New-Project.png" alt="social">
+<img src="https://i.ibb.co/PzPm9hX/New-Project.png" alt="social" width="300">
 
 # Socmed Injection Gateway #
 
