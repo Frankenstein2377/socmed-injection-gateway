@@ -1,5 +1,6 @@
-const rp = require("../services/request")
 const helper = require("../helpers/main")
+const axios = require('axios')
+const qs = require("qs")
 
 module.exports = {
   request: (element) => {
@@ -9,13 +10,32 @@ module.exports = {
           url: element.resource,
           params: req.query,
           method: element.method,
-          headers: helper.generateHeader(req.headers),
+          headers: helper.generateHeader(req.headers)
         }
 
-        let response = await rp.request(options)
-        console.log(response)
-        res.send(response)
+        if (element.method == "GET") {
+          options.params = req.query;
+        } else if (
+          element.method == "POST" ||
+          element.method == "PUT" ||
+          element.method == "PATCH"
+        ) {
+          if (
+            "content-type" in options.headers &&
+            options.headers["content-type"] ==
+              "application/x-www-form-urlencoded"
+          ) {
+            options.data = qs.stringify(req.body);
+          } else {
+            options.data = req.body;
+          }
+        }
 
+        let { status, data } = await axios.request(options)
+        res.send({
+          status: status,
+          data: data
+        })
         return next()
       } catch (err) {
         res.send(500, {
